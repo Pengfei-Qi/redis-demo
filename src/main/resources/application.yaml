@@ -1,8 +1,50 @@
-spring:
+dbserver:
+  host: 10.136.106.77
+  mysql:
+    user: root
+    password: 123456
+    dbname: hmdp
+    port: 30306
   redis:
-    host: 10.136.106.77
-    password: Nlkf@123%Redis
+    password: 123456
     port: 32000
+
+server:
+  port: 8081
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://${dbserver.host}:${dbserver.mysql.port}/${dbserver.mysql.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: ${dbserver.mysql.user}
+      password: ${dbserver.mysql.password}
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+  redis:
+    host: ${dbserver.host}
+    password: ${dbserver.redis.password}
+    port: ${dbserver.redis.port}
     timeout: 5000
     lettuce:
       pool:
@@ -10,3 +52,9 @@ spring:
         max-wait: 5000ms
         max-idle: 8
         min-idle: 0
+  application:
+    name: redis-demo
+  jackson:
+    default-property-inclusion: non_null # JSON处理时忽略非空字段
+mybatis-plus:
+  type-aliases-package: com.union.redisdemo.entity

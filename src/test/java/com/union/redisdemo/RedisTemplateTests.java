@@ -1,6 +1,6 @@
 package com.union.redisdemo;
 
-import com.union.redisdemo.vo.User;
+import com.union.redisdemo.dto.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

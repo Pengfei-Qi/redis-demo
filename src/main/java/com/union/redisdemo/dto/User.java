@@ -1,4 +1,4 @@
-package com.union.redisdemo.vo;
+package com.union.redisdemo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
