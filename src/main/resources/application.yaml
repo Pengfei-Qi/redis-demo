@@ -1,0 +1,12 @@
+spring:
+  redis:
+    host: 10.136.106.77
+    password: Nlkf@123%Redis
+    port: 32000
+    timeout: 5000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: 5000ms
+        max-idle: 8
+        min-idle: 0
