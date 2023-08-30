@@ -4,6 +4,7 @@ package com.union.redisdemo.controller;
 import com.union.redisdemo.dto.LoginFormDTO;
 import com.union.redisdemo.dto.Result;
 import com.union.redisdemo.dto.UserDTO;
+import com.union.redisdemo.entity.User;
 import com.union.redisdemo.entity.UserInfo;
 import com.union.redisdemo.service.IUserInfoService;
 import com.union.redisdemo.service.IUserService;
@@ -56,7 +57,7 @@ public class UserController {
 
     @GetMapping("/me")
     public Result me(){
-        UserDTO user = UserHolder.getUser();
+        User user = UserHolder.getUser();
         return Result.ok(user);
     }
 

@@ -13,7 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "/user/code",
                 "/user/login",
                 "/shop-type/**",
-                "/voucher/**"
+                "/voucher/**",
+                "/upload/**"
         );
     }
 }

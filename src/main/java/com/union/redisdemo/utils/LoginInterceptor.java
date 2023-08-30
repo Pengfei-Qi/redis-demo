@@ -1,6 +1,7 @@
 package com.union.redisdemo.utils;
 
 import com.union.redisdemo.dto.UserDTO;
+import com.union.redisdemo.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -19,7 +20,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
-        UserHolder.saveUser((UserDTO) user);
+        UserHolder.saveUser((User) user);
         return true;
     }
 
