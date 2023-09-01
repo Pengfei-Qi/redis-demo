@@ -10,6 +10,7 @@ import com.union.redisdemo.service.IShopService;
 import com.union.redisdemo.utils.RedisConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -23,25 +24,48 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
     @Override
     public Result queryById(Long id) {
-        String key = RedisConstants.CACHE_SHOP_KEY +id;
-
-        String shopStr = stringRedisTemplate.opsForValue().get(key);
-
-        if (StrUtil.isNotBlank(shopStr)){
-            Shop shop = JSONUtil.toBean(shopStr, Shop.class);
-            return Result.ok(shop);
-        }
-        Shop shop = getById(id);
+        //解决缓存穿透问题
+        Shop shop = getShopWithCacheThrough(id);
 
         if (shop == null){
             return Result.fail("商品不存在");
         }
 
-        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop),RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
         return Result.ok(shop);
     }
 
+    public Shop getShopWithCacheThrough(Long id){
+        String key = RedisConstants.CACHE_SHOP_KEY +id;
+
+        String shopStr = stringRedisTemplate.opsForValue().get(key);
+
+        /**
+         * 字符串是否为非空白，非空白的定义如下：
+         * 1. 不为 null
+         * 2. 不为空字符串：""
+         * 3. 不为空格、全角空格、制表符、换行符，等不可见字符
+         */
+        if (StrUtil.isNotBlank(shopStr)){
+            return JSONUtil.toBean(shopStr, Shop.class);
+        }
+        // 说明：排除为 null 的情况，只剩下空字符串:""
+        if (shopStr != null){
+            return null;
+        }
+        Shop shop = getById(id);
+
+        if (shop == null){
+            stringRedisTemplate.opsForValue().set(key, "",RedisConstants.CACHE_NULL_TTL, TimeUnit.MINUTES);
+            return null;
+        }
+
+        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop),RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
+        return shop;
+
+    }
+
     @Override
+    @Transactional
     public Result updateShop(Shop shop) {
         Long id = shop.getId();
         if (id == null){

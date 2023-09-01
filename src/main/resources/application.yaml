@@ -57,4 +57,10 @@ spring:
   jackson:
     default-property-inclusion: non_null # JSON处理时忽略非空字段
 mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: com.union.redisdemo.entity
+
+logging:
+  level:
+    com.union.redisdemo: debug
