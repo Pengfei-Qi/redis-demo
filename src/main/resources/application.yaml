@@ -1,12 +1,12 @@
 dbserver:
-  host: 10.136.106.77
+  host: 192.168.235.233
   mysql:
     user: root
     password: 123456
     dbname: hmdp
     port: 30306
   redis:
-    password: 123456
+    password:
     port: 32000
 
 server:
