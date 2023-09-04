@@ -3,6 +3,7 @@ package com.union.redisdemo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.union.redisdemo.dto.User;
+import com.union.redisdemo.service.impl.ShopServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,9 @@ public class StringRedisTemplateTests {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private ShopServiceImpl shopService;
 
     private static final JsonMapper jsonMapper = new JsonMapper();
 
@@ -50,4 +54,10 @@ public class StringRedisTemplateTests {
         Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries("com:neo:e");
         System.out.println(entries);
     }
+
+    @Test
+    void testSaveShop(){
+        shopService.saveShop2Redis(1L,30L);
+    }
+
 }
