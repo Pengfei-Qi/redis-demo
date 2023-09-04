@@ -118,10 +118,13 @@ public class CacheClient {
             executorService.submit(()->{
                 try {
                     R r1 = backData.apply(id);
-                    RedisData data = new RedisData();
-                    data.setData(r1);
-                    data.setExpireTime(LocalDateTime.now().plusSeconds(unit.toSeconds(timeout)));
-                    stringRedisTemplate.opsForValue().set(RedisConstants.CACHE_SHOP_KEY+id, JSONUtil.toJsonStr(data));
+                    stringRedisTemplate.opsForValue().set(RedisConstants.CACHE_SHOP_KEY+id,
+                            JSONUtil.toJsonStr(
+                                    RedisData.builder().
+                                            data(r1).
+                                            expireTime(LocalDateTime.now().plusSeconds(unit.toSeconds(timeout))).
+                                            build()
+                            ));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 } finally {

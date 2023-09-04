@@ -47,10 +47,12 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
     public void saveShop2Redis(Long id,Long expireTime){
         Shop shop = getById(id);
-        RedisData redisData = new RedisData();
-        redisData.setData(shop);
-        redisData.setExpireTime(LocalDateTime.now().plusSeconds(expireTime));
-        stringRedisTemplate.opsForValue().set(RedisConstants.CACHE_SHOP_KEY+id, JSONUtil.toJsonStr(redisData));
+        stringRedisTemplate.opsForValue().set(RedisConstants.CACHE_SHOP_KEY+id, JSONUtil.toJsonStr(
+                RedisData.builder().
+                        data(shop).
+                        expireTime(LocalDateTime.now().plusSeconds(expireTime)).
+                        build()
+        ));
     }
 
     @Override
